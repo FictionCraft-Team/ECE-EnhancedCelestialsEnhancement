@@ -153,12 +153,10 @@ public class ECEEventsHandler {
                             if (targetEntity.getName().equals(entityName) || targetEntity.getName().equals(entityRegName)) {
                                 if (targetEntity.getDrop() != null) {
                                     for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
-                                        MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
-                                        AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
 
-                                        itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
+                                        Item targetDropItemItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")+1)));
 
-                                        if (targetDropItemItem.get() != null) {
+                                        if (targetDropItemItem != null) {
                                             if (targetEntity.isWhitelist()) {
                                                 if (EnhancedCelestials.currentLunarEvent instanceof BloodMoon) {
                                                     if (chanceHandling(targetDropItem.getChance())) {
@@ -173,7 +171,7 @@ public class ECEEventsHandler {
                                                             }
                                                         }
                                                         int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                         ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                         world.addEntity(ieToSpawn);
@@ -189,7 +187,7 @@ public class ECEEventsHandler {
                                                         }
 
                                                         int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                         ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                         world.addEntity(ieToSpawn);
@@ -207,11 +205,10 @@ public class ECEEventsHandler {
                                 if (entityRegName.startsWith(modid)) {
                                     if (targetEntity.getDrop() != null) {
                                         for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
-                                            MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
-                                            AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                            itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
 
-                                            if (targetDropItemItem.get() != null) {
+                                            Item targetDropItemItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")+1)));
+
+                                            if (targetDropItemItem != null) {
                                                 if (targetEntity.isWhitelist()) {
                                                     if (EnhancedCelestials.currentLunarEvent instanceof BloodMoon) {
                                                         if (chanceHandling(targetDropItem.getChance())) {
@@ -222,7 +219,7 @@ public class ECEEventsHandler {
                                                             }
 
                                                             int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                             ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                             world.addEntity(ieToSpawn);
@@ -238,7 +235,7 @@ public class ECEEventsHandler {
                                                             }
 
                                                             int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                             ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                             world.addEntity(ieToSpawn);
@@ -260,16 +257,14 @@ public class ECEEventsHandler {
                             if (targetEntity.getName().equals(entityName) || targetEntity.getName().equals(entityRegName)) {
                                 if (targetEntity.getDrop() != null) {
                                     for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
-                                        MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
-                                        AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                        itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
+                                        Item targetDropItemItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")+1)));
 
-                                        if (targetDropItemItem.get() != null) {
+                                        if (targetDropItemItem != null) {
                                             if (targetEntity.isWhitelist()) {
                                                 if (EnhancedCelestials.currentLunarEvent instanceof HarvestMoon) {
                                                     if (chanceHandling(targetDropItem.getChance())) {
                                                         int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                         ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                         world.addEntity(ieToSpawn);
@@ -279,7 +274,7 @@ public class ECEEventsHandler {
                                                 if (!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon)) {
                                                     if (chanceHandling(targetDropItem.getChance())) {
                                                         int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                         ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                         world.addEntity(ieToSpawn);
@@ -297,16 +292,14 @@ public class ECEEventsHandler {
                                 if (entityRegName.startsWith(modid)) {
                                     if (targetEntity.getDrop() != null) {
                                         for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
-                                            MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
-                                            AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                            itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
+                                            Item targetDropItemItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")+1)));
 
-                                            if (targetDropItemItem.get() != null) {
+                                            if (targetDropItemItem != null) {
                                                 if (targetEntity.isWhitelist()) {
                                                     if (EnhancedCelestials.currentLunarEvent instanceof HarvestMoon) {
                                                         if (chanceHandling(targetDropItem.getChance())) {
                                                             int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                             ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                             world.addEntity(ieToSpawn);
@@ -316,7 +309,7 @@ public class ECEEventsHandler {
                                                     if (!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon)) {
                                                         if (chanceHandling(targetDropItem.getChance())) {
                                                             int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem, amount);
                                                             ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
                                                             world.addEntity(ieToSpawn);
