@@ -1,0 +1,2 @@
+# ECE-EnhancedCelestialsEnhancement
+An addon mod for the mod: Enhanced Celetials. Added capability for pack developers to add mob that only spawns during the blood/harvest moon. Drop specific things only on blood/harvest moon.
