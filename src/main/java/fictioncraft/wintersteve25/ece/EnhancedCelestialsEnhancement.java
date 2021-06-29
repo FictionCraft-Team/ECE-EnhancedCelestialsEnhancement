@@ -18,6 +18,7 @@ public class EnhancedCelestialsEnhancement {
     public EnhancedCelestialsEnhancement() {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::mobSpawnEvent);
+        MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::mobDropsEvent);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
 

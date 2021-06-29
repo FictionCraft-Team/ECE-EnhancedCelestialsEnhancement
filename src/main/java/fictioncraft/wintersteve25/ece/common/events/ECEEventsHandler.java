@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ECEEventsHandler {
@@ -154,24 +155,45 @@ public class ECEEventsHandler {
                                     for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
                                         MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
                                         AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                        itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName())).ifPresent(targetDropItemItem::set);
+
+                                        itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
 
                                         if (targetDropItemItem.get() != null) {
                                             if (targetEntity.isWhitelist()) {
                                                 if (EnhancedCelestials.currentLunarEvent instanceof BloodMoon) {
-                                                    int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                    ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                    ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                    if (chanceHandling(targetDropItem.getChance())) {
+                                                        if (targetEntity.isOverwriteOriginalDrop()) {
+                                                            if (event.isCancelable()) {
+                                                                event.setCanceled(true);
+                                                            }
+                                                        }
+                                                        if (targetEntity.isOverwriteOriginalDrop()) {
+                                                            if (event.isCancelable()) {
+                                                                event.setCanceled(true);
+                                                            }
+                                                        }
+                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
-                                                    world.addEntity(ieToSpawn);
+                                                        world.addEntity(ieToSpawn);
+                                                    }
                                                 }
                                             } else if (!targetEntity.isWhitelist()) {
                                                 if (!(EnhancedCelestials.currentLunarEvent instanceof BloodMoon)) {
-                                                    int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                    ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                    ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                    if (chanceHandling(targetDropItem.getChance())) {
+                                                        if (targetEntity.isOverwriteOriginalDrop()) {
+                                                            if (event.isCancelable()) {
+                                                                event.setCanceled(true);
+                                                            }
+                                                        }
 
-                                                    world.addEntity(ieToSpawn);
+                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+
+                                                        world.addEntity(ieToSpawn);
+                                                    }
                                                 }
                                             }
                                         }
@@ -187,24 +209,40 @@ public class ECEEventsHandler {
                                         for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
                                             MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
                                             AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                            itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName())).ifPresent(targetDropItemItem::set);
+                                            itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
 
                                             if (targetDropItemItem.get() != null) {
                                                 if (targetEntity.isWhitelist()) {
                                                     if (EnhancedCelestials.currentLunarEvent instanceof BloodMoon) {
-                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                        if (chanceHandling(targetDropItem.getChance())) {
+                                                            if (targetEntity.isOverwriteOriginalDrop()) {
+                                                                if (event.isCancelable()) {
+                                                                    event.setCanceled(true);
+                                                                }
+                                                            }
 
-                                                        world.addEntity(ieToSpawn);
+                                                            int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+
+                                                            world.addEntity(ieToSpawn);
+                                                        }
                                                     }
                                                 } else if (!targetEntity.isWhitelist()) {
                                                     if (!(EnhancedCelestials.currentLunarEvent instanceof BloodMoon)) {
-                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                        if (chanceHandling(targetDropItem.getChance())) {
+                                                            if (targetEntity.isOverwriteOriginalDrop()) {
+                                                                if (event.isCancelable()) {
+                                                                    event.setCanceled(true);
+                                                                }
+                                                            }
 
-                                                        world.addEntity(ieToSpawn);
+                                                            int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+
+                                                            world.addEntity(ieToSpawn);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -224,24 +262,28 @@ public class ECEEventsHandler {
                                     for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
                                         MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
                                         AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                        itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName())).ifPresent(targetDropItemItem::set);
+                                        itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
 
                                         if (targetDropItemItem.get() != null) {
                                             if (targetEntity.isWhitelist()) {
                                                 if (EnhancedCelestials.currentLunarEvent instanceof HarvestMoon) {
-                                                    int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                    ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                    ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                    if (chanceHandling(targetDropItem.getChance())) {
+                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
-                                                    world.addEntity(ieToSpawn);
+                                                        world.addEntity(ieToSpawn);
+                                                    }
                                                 }
                                             } else if (!targetEntity.isWhitelist()) {
                                                 if (!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon)) {
-                                                    int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                    ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                    ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                    if (chanceHandling(targetDropItem.getChance())) {
+                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
-                                                    world.addEntity(ieToSpawn);
+                                                        world.addEntity(ieToSpawn);
+                                                    }
                                                 }
                                             }
                                         }
@@ -257,24 +299,28 @@ public class ECEEventsHandler {
                                         for (JsonBuilder.JsonItemStackProperty targetDropItem : targetEntity.getDrop()) {
                                             MutableRegistry<Item> itemMutableRegistry = world.func_241828_r().getRegistry(ForgeRegistries.Keys.ITEMS);
                                             AtomicReference<Item> targetDropItemItem = new AtomicReference<>();
-                                            itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName())).ifPresent(targetDropItemItem::set);
+                                            itemMutableRegistry.getOptional(new ResourceLocation(targetDropItem.getName().substring(0, targetDropItem.getName().indexOf(":")), targetDropItem.getName().substring(targetDropItem.getName().indexOf(":")))).ifPresent(targetDropItemItem::set);
 
                                             if (targetDropItemItem.get() != null) {
                                                 if (targetEntity.isWhitelist()) {
                                                     if (EnhancedCelestials.currentLunarEvent instanceof HarvestMoon) {
-                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                        if (chanceHandling(targetDropItem.getChance())) {
+                                                            int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
-                                                        world.addEntity(ieToSpawn);
+                                                            world.addEntity(ieToSpawn);
+                                                        }
                                                     }
                                                 } else if (!targetEntity.isWhitelist()) {
                                                     if (!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon)) {
-                                                        int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
-                                                        ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
-                                                        ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
+                                                        if (chanceHandling(targetDropItem.getChance())) {
+                                                            int amount = MiscHelper.randomInRange(targetDropItem.getMinAmount(), targetDropItem.getMaxAmount());
+                                                            ItemStack isToSpawn = new ItemStack(targetDropItemItem.get(), amount);
+                                                            ItemEntity ieToSpawn = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), isToSpawn);
 
-                                                        world.addEntity(ieToSpawn);
+                                                            world.addEntity(ieToSpawn);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -287,5 +333,12 @@ public class ECEEventsHandler {
                 }
             }
         }
+    }
+
+    public static boolean chanceHandling(int chance) {
+        Random rand = new Random();
+        double randN = rand.nextDouble();
+
+        return randN < (double) chance/100;
     }
 }
