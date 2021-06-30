@@ -21,9 +21,9 @@ description='''
     versionRange="[1.16.4,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.ece]]
-    modId="enhancedcelestials"
-    mandatory=true
-    versionRange="[1.0.4,)"
-    ordering="NONE"
-    side="BOTH"
+#[[dependencies.ece]]
+#    modId="enhancedcelestials"
+#    mandatory=true
+#    versionRange="[1.0.4,)"
+#    ordering="NONE"
+#    side="BOTH"

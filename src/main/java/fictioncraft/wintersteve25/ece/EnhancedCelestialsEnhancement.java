@@ -1,8 +1,16 @@
 package fictioncraft.wintersteve25.ece;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import fictioncraft.wintersteve25.ece.common.commands.ReloadCommand;
 import fictioncraft.wintersteve25.ece.common.config.Config;
-import fictioncraft.wintersteve25.ece.common.config.JsonConfig;
+import fictioncraft.wintersteve25.ece.common.config.crops.JsonCropConfig;
+import fictioncraft.wintersteve25.ece.common.config.entity.JsonConfig;
 import fictioncraft.wintersteve25.ece.common.events.ECEEventsHandler;
+import fictioncraft.wintersteve25.ece.common.events.ErrorHandler;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -19,14 +27,32 @@ public class EnhancedCelestialsEnhancement {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::mobSpawnEvent);
         MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::mobDropsEvent);
+        MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::cropGrowthEvent);
+        MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::boneMealEvent);
+        MinecraftForge.EVENT_BUS.addListener(ECEEventsHandler::serverInit);
+        MinecraftForge.EVENT_BUS.addListener(ErrorHandler::onPlayerLogIn);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
 
+
         if (Config.PRINT_EXAMPLE.get()) {
             JsonConfig.printExample();
+            JsonCropConfig.printExample();
         }
 
         JsonConfig.createJsonConfig();
         JsonConfig.read();
+
+        JsonCropConfig.createJsonConfig();
+        JsonCropConfig.read();
+    }
+
+    public static void registerCommands(CommandDispatcher<CommandSource> dispatcher) {
+        LiteralArgumentBuilder<CommandSource> requires = Commands.literal("ece").requires((commandSource) -> {
+            return commandSource.hasPermissionLevel(3);
+        });
+        LiteralCommandNode<CommandSource> source = dispatcher.register(requires.then(ReloadCommand.register(dispatcher)));
+        dispatcher.register(Commands.literal("ece").redirect(source));
+        LOGGER.info("Registered ECE Commands!");
     }
 }

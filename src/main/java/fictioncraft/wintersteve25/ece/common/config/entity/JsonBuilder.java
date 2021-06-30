@@ -1,4 +1,4 @@
-package fictioncraft.wintersteve25.ece.common.config;
+package fictioncraft.wintersteve25.ece.common.config.entity;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

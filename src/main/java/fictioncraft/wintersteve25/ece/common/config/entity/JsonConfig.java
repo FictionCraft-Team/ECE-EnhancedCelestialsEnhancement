@@ -1,8 +1,7 @@
-package fictioncraft.wintersteve25.ece.common.config;
+package fictioncraft.wintersteve25.ece.common.config.entity;
 
 import com.google.gson.*;
 import fictioncraft.wintersteve25.ece.EnhancedCelestialsEnhancement;
-import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
@@ -53,10 +52,10 @@ public class JsonConfig {
         drops.add(new JsonBuilder.JsonItemStackProperty("minecraft:iron_ingot", 1, 3, 30));
 
         ArrayList<JsonBuilder.JsonEntityProperty> blood = new ArrayList<>();
-        blood.add(new JsonBuilder.JsonEntityProperty("minecraft:cow (minecraft:cow and cow will both work)", drops, true, false, false));
+        blood.add(new JsonBuilder.JsonEntityProperty("minecraft:cow", drops, true, false, false));
 
         ArrayList<JsonBuilder.JsonEntityProperty> harvest = new ArrayList<>();
-        harvest.add(new JsonBuilder.JsonEntityProperty("cow", drops, true, false, true));
+        harvest.add(new JsonBuilder.JsonEntityProperty("minecraft:slime", drops, true, false, true));
 
         JsonBuilder exampleBuild = new JsonBuilder(blood, harvest);
 
@@ -74,7 +73,7 @@ public class JsonConfig {
             createJsonConfig();
         } else {
             try {
-                EnhancedCelestialsEnhancement.LOGGER.log(Level.INFO, "Attempting to read ece config json file...");
+                EnhancedCelestialsEnhancement.LOGGER.info("Attempting to read ece_config.json file...");
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 JsonBuilder builder = gson.fromJson(new FileReader(file), JsonBuilder.class);
                 if (builder != null) {

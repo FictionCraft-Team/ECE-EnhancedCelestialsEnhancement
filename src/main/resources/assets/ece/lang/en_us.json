@@ -1,0 +1,10 @@
+{
+  "ece.reload.failed.fileNotFound": "§cECE Error: Config file not found! Generating config file...",
+  "ece.reload.failed.fieldIsEmpty": "§cECE Error: There are no valid configuration to be reloaded!",
+  "ece.reload.failed.itemStackNotValid": "§cECE Error: ItemStack drop(s) are not valid",
+  "ece.reload.failed.dropsAreNull": "§cECE Error: Drop(s) are empty, if you intend to not specify drops, ignore this error, you can disable it in the server config",
+  "ece.reload.failed.entityNotValid": "§cECE Error: Entity(ies) not valid!",
+  "ece.reload.failed.modNotFound": "§cECE Error: Specified mod not found!",
+  "ece.reload.failed.cantFindCrop": "§cECE Error: Can not find specified crop!",
+  "ece.reload.success": "§aReload Success!"
+}
