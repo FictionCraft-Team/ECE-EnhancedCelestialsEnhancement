@@ -25,16 +25,20 @@ public class JsonBuilder {
         private boolean whitelist;
         private boolean onlyDrop;
         private boolean overwriteOriginalDrop;
+        private int experienceToDrop;
+        private boolean removeOriginalXPDrop;
 
         @Nullable
         private ArrayList<JsonItemStackProperty> drops;
 
-        public JsonEntityProperty(String name, @Nullable ArrayList<JsonItemStackProperty> drops, boolean whitelist, boolean onlyDrop, boolean overwriteOriginalDrop) {
+        public JsonEntityProperty(String name, @Nullable ArrayList<JsonItemStackProperty> drops, boolean whitelist, boolean onlyDrop, boolean overwriteOriginalDrop, int experienceToDrop, boolean removeOriginalXPDrop) {
             this.name = name;
             this.drops = drops;
             this.whitelist = whitelist;
             this.onlyDrop = onlyDrop;
             this.overwriteOriginalDrop = overwriteOriginalDrop;
+            this.experienceToDrop = experienceToDrop;
+            this.removeOriginalXPDrop = removeOriginalXPDrop;
         }
 
         @Nullable
@@ -56,6 +60,14 @@ public class JsonBuilder {
 
         public boolean isOverwriteOriginalDrop() {
             return overwriteOriginalDrop;
+        }
+
+        public int getExperienceToDrop() {
+            return experienceToDrop;
+        }
+
+        public boolean isRemoveOriginalXPDrop() {
+            return removeOriginalXPDrop;
         }
     }
 

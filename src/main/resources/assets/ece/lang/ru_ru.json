@@ -1,0 +1,11 @@
+{
+  "Russian translation credits": "https://github.com/DrHesperus",
+  "ece.reload.failed.fileNotFound": "§cECE Ошибка: Файл конфигурации не найден! Генерирование конфигурационного файла...",
+  "ece.reload.failed.fieldIsEmpty": "§cECE Ошибка: Нет допустимой конфигурации для загрузки!",
+  "ece.reload.failed.itemStackNotValid": "§cECE Ошибкаr: Drop(s) не допустимы ItemStack",
+  "ece.reload.failed.dropsAreNull": "§cECE Ошибка: Drop(s) пуст(ой), если ты не собираешься указать Drop(s), игнорируй эту ошибку, или же, ты можешь отлючить в конфиге сервера.",
+  "ece.reload.failed.entityNotValid": "§cECE Ошибка: Entity(ies) не допустим(ы)!",
+  "ece.reload.failed.modNotFound": "§cECE Ошибка: Указанный мод не найден!",
+  "ece.reload.failed.cantFindCrop": "§cECE Ошибка: Не могу найти указанный посев!",
+  "ece.reload.success": "§aУспешно перезагружено!"
+}

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fictioncraft.wintersteve25.ece.EnhancedCelestialsEnhancement;
 import org.apache.logging.log4j.Level;
+import org.lwjgl.system.CallbackI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,14 +16,19 @@ public class JsonCropConfig {
 
     public static JsonCropBuilder blood;
     public static JsonCropBuilder harvest;
+    public static File directory = new File("ece_configs");
 
     public static void createJsonConfig() {
         PrintWriter writer;
-        File file = new File("ece_crop_config.json");
+        File file = new File(directory.getPath() + File.separator + "ece_crop_config.json");
+
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
 
         if (!file.exists()) {
             try {
-                writer = new PrintWriter("ece_crop_config.json");
+                writer = new PrintWriter(directory.getPath() + File.separator + "ece_crop_config.json");
             } catch (Exception e) {
                 EnhancedCelestialsEnhancement.LOGGER.log(Level.ERROR, "Error writing ece_crop_config.json");
                 e.printStackTrace();
@@ -46,7 +52,7 @@ public class JsonCropConfig {
         PrintWriter writer;
 
         try {
-            writer = new PrintWriter("ece_crop_config_example.json");
+            writer = new PrintWriter(directory.getPath() + File.separator + "ece_crop_config_example.json");
         } catch (Exception e) {
             EnhancedCelestialsEnhancement.LOGGER.log(Level.ERROR, "Error writing ece_crop_config_example.json");
             e.printStackTrace();
@@ -54,10 +60,10 @@ public class JsonCropConfig {
         }
 
         ArrayList<JsonCropBuilder.JsonCropProperties> blood = new ArrayList<>();
-        blood.add(new JsonCropBuilder.JsonCropProperties("minecraft:nether_wart", true));
+        blood.add(new JsonCropBuilder.JsonCropProperties("minecraft:nether_wart", true, true));
 
         ArrayList<JsonCropBuilder.JsonCropProperties> harvest = new ArrayList<>();
-        harvest.add(new JsonCropBuilder.JsonCropProperties("minecraft:wheat", true));
+        harvest.add(new JsonCropBuilder.JsonCropProperties("minecraft:wheat", true, false));
 
         JsonCropBuilder exampleBuild = new JsonCropBuilder(blood, harvest);
 
@@ -69,7 +75,7 @@ public class JsonCropConfig {
     }
 
     public static void read() {
-        File file = new File("ece_crop_config.json");
+        File file = new File(directory.getPath() + File.separator + "ece_crop_config.json");
         if (!file.exists()) {
             EnhancedCelestialsEnhancement.LOGGER.log(Level.ERROR, "ECE Config json file not found! Creating a new one..");
             createJsonConfig();

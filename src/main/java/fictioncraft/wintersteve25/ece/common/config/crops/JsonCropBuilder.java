@@ -22,10 +22,12 @@ public class JsonCropBuilder {
     public static class JsonCropProperties {
         private String name;
         private boolean isWhitelist;
+        private boolean allowBonemeal;
 
-        public JsonCropProperties(String name, boolean isWhitelist) {
+        public JsonCropProperties(String name, boolean isWhitelist, boolean allowBonemeal) {
             this.name = name;
             this.isWhitelist = isWhitelist;
+            this.allowBonemeal = allowBonemeal;
         }
 
         public String getName() {
@@ -34,6 +36,10 @@ public class JsonCropBuilder {
 
         public boolean isWhitelist() {
             return isWhitelist;
+        }
+
+        public boolean isAllowBonemeal() {
+            return allowBonemeal;
         }
     }
 }

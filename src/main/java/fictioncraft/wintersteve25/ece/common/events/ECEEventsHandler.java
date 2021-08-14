@@ -4,18 +4,24 @@ import corgitaco.enchancedcelestials.EnhancedCelestials;
 import corgitaco.enchancedcelestials.lunarevent.BloodMoon;
 import corgitaco.enchancedcelestials.lunarevent.HarvestMoon;
 import fictioncraft.wintersteve25.ece.EnhancedCelestialsEnhancement;
+import fictioncraft.wintersteve25.ece.common.config.blockdrop.JsonBlockBuilder;
+import fictioncraft.wintersteve25.ece.common.config.blockdrop.JsonBlockConfig;
 import fictioncraft.wintersteve25.ece.common.config.crops.JsonCropBuilder;
 import fictioncraft.wintersteve25.ece.common.config.crops.JsonCropConfig;
 import fictioncraft.wintersteve25.ece.common.config.entity.JsonConfig;
 import fictioncraft.wintersteve25.ece.common.config.entity.JsonBuilder;
 import fictioncraft.wintersteve25.ece.common.helper.MiscHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -26,7 +32,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Random;
 
 public class ECEEventsHandler {
-    public static void serverInit (FMLServerStartingEvent event) {
+    public static void serverInit(FMLServerStartingEvent event) {
         EnhancedCelestialsEnhancement.registerCommands(event.getServer().getCommandManager().getDispatcher());
     }
 
@@ -120,6 +126,76 @@ public class ECEEventsHandler {
                                                     event.setResult(Event.Result.DENY);
                                                 } else {
                                                     event.setResult(Event.Result.ALLOW);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void mobExperienceDropEvent(LivingExperienceDropEvent event) {
+        JsonBuilder blood = JsonConfig.blood;
+        JsonBuilder harvest = JsonConfig.harvest;
+
+        Entity entity = event.getEntity();
+        if (entity != null) {
+            if (!entity.getEntityWorld().isRemote()) {
+                String entityRegName = entity.getEntityString();
+
+                if (entityRegName != null) {
+                    if (blood != null) {
+                        if (!blood.getBlood().isEmpty()) {
+                            for (JsonBuilder.JsonEntityProperty targetEntity : blood.getBlood()) {
+                                if (targetEntity.getName().equals(entityRegName)) {
+                                    if (targetEntity.getExperienceToDrop() != 0) {
+                                        if (targetEntity.isWhitelist()) {
+                                            if (EnhancedCelestials.currentLunarEvent instanceof BloodMoon) {
+                                                if (targetEntity.isRemoveOriginalXPDrop()) {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop());
+                                                } else {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop() + event.getOriginalExperience());
+                                                }
+                                            }
+                                        } else if (!targetEntity.isWhitelist()) {
+                                            if (!(EnhancedCelestials.currentLunarEvent instanceof BloodMoon)) {
+                                                if (targetEntity.isRemoveOriginalXPDrop()) {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop());
+                                                } else {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop() + event.getOriginalExperience());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (harvest != null) {
+                        if (!harvest.getHarvest().isEmpty()) {
+                            for (JsonBuilder.JsonEntityProperty targetEntity : harvest.getHarvest()) {
+                                if (targetEntity.getName().equals(entityRegName)) {
+                                    if (targetEntity.getExperienceToDrop() != 0) {
+                                        if (targetEntity.isWhitelist()) {
+                                            if (EnhancedCelestials.currentLunarEvent instanceof HarvestMoon) {
+                                                if (targetEntity.isRemoveOriginalXPDrop()) {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop());
+                                                } else {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop() + event.getOriginalExperience());
+                                                }
+                                            }
+                                        } else if (!targetEntity.isWhitelist()) {
+                                            if (!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon)) {
+                                                if (targetEntity.isRemoveOriginalXPDrop()) {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop());
+                                                } else {
+                                                    event.setDroppedExperience(targetEntity.getExperienceToDrop() + event.getOriginalExperience());
                                                 }
                                             }
                                         }
@@ -327,8 +403,8 @@ public class ECEEventsHandler {
         }
     }
 
-    public static void cropGrowthEvent (BlockEvent.CropGrowEvent.Pre event) {
-        World world = (World)event.getWorld();
+    public static void cropGrowthEvent(BlockEvent.CropGrowEvent.Pre event) {
+        World world = (World) event.getWorld();
         ResourceLocation blockRL = world.getBlockState(event.getPos()).getBlock().getRegistryName();
 
         JsonCropBuilder blood = JsonCropConfig.blood;
@@ -393,7 +469,7 @@ public class ECEEventsHandler {
         }
     }
 
-    public static void boneMealEvent (BonemealEvent event) {
+    public static void boneMealEvent(BonemealEvent event) {
         World world = event.getWorld();
         ResourceLocation blockRL = world.getBlockState(event.getPos()).getBlock().getRegistryName();
 
@@ -405,13 +481,15 @@ public class ECEEventsHandler {
                 if (!blood.getBlood().isEmpty()) {
                     for (JsonCropBuilder.JsonCropProperties crops : blood.getBlood()) {
                         if (crops != null) {
-                            if (!crops.getName().isEmpty()) {
-                                if (blockRL != null) {
-                                    if (crops.getName().equals(blockRL.getNamespace() + ":" + blockRL.getPath())) {
-                                        if (crops.isWhitelist()) {
-                                            event.setCanceled(!(EnhancedCelestials.currentLunarEvent instanceof BloodMoon));
-                                        } else if (!crops.isWhitelist()) {
-                                            event.setCanceled(EnhancedCelestials.currentLunarEvent instanceof BloodMoon);
+                            if (!crops.isAllowBonemeal()) {
+                                if (!crops.getName().isEmpty()) {
+                                    if (blockRL != null) {
+                                        if (crops.getName().equals(blockRL.getNamespace() + ":" + blockRL.getPath())) {
+                                            if (crops.isWhitelist()) {
+                                                event.setCanceled(!(EnhancedCelestials.currentLunarEvent instanceof BloodMoon));
+                                            } else if (!crops.isWhitelist()) {
+                                                event.setCanceled(EnhancedCelestials.currentLunarEvent instanceof BloodMoon);
+                                            }
                                         }
                                     }
                                 }
@@ -425,13 +503,105 @@ public class ECEEventsHandler {
                 if (!harvest.getHarvest().isEmpty()) {
                     for (JsonCropBuilder.JsonCropProperties crops : harvest.getHarvest()) {
                         if (crops != null) {
-                            if (!crops.getName().isEmpty()) {
-                                if (blockRL != null) {
-                                    if (crops.getName().equals(blockRL.getNamespace() + ":" + blockRL.getPath())) {
-                                        if (crops.isWhitelist()) {
-                                            event.setCanceled(!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon));
-                                        } else if (!crops.isWhitelist()) {
-                                            event.setCanceled(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon);
+                            if (!crops.isAllowBonemeal()) {
+                                if (!crops.getName().isEmpty()) {
+                                    if (blockRL != null) {
+                                        if (crops.getName().equals(blockRL.getNamespace() + ":" + blockRL.getPath())) {
+                                            if (crops.isWhitelist()) {
+                                                event.setCanceled(!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon));
+                                            } else if (!crops.isWhitelist()) {
+                                                event.setCanceled(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void blockBreakEvent(BlockEvent.BreakEvent event) {
+        Block block = event.getState().getBlock();
+        ResourceLocation blockRegName = block.getRegistryName();
+
+        JsonBlockBuilder blood = JsonBlockConfig.blood;
+        JsonBlockBuilder harvest = JsonBlockConfig.harvest;
+
+        if (!event.getWorld().isRemote()) {
+            if (blood != null) {
+                if (!blood.getBlood().isEmpty()) {
+                    for (JsonBlockBuilder.JsonBlockProperties blocks : blood.getBlood()) {
+                        if (blocks != null) {
+                            if (!blocks.getName().isEmpty()) {
+                                if (blockRegName != null) {
+                                    if (blocks.getName().equals(blockRegName.getNamespace() + ":" + blockRegName.getPath())) {
+                                        for (JsonBuilder.JsonItemStackProperty drops : blocks.getDrops()) {
+                                            if (drops != null) {
+                                                if (drops.getName() != null) {
+                                                    Item itemDrop = ForgeRegistries.ITEMS.getValue(new ResourceLocation(drops.getName()));
+                                                    if (itemDrop != null) {
+                                                        if (drops.getMinAmount() != 0 && drops.getMaxAmount() != 0 ) {
+                                                            int randomInt = MiscHelper.randomInRange(drops.getMinAmount(), drops.getMaxAmount());
+                                                            if (blocks.isWhitelist()) {
+                                                                if (EnhancedCelestials.currentLunarEvent instanceof BloodMoon) {
+                                                                    if(chanceHandling(drops.getChance())) {
+                                                                        net.minecraft.inventory.InventoryHelper.spawnItemStack((World) event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), new ItemStack(itemDrop, randomInt));
+                                                                    }
+                                                                }
+                                                            } else if (!blocks.isWhitelist()) {
+                                                                if (!(EnhancedCelestials.currentLunarEvent instanceof BloodMoon)) {
+                                                                    if(chanceHandling(drops.getChance())) {
+                                                                        net.minecraft.inventory.InventoryHelper.spawnItemStack((World) event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), new ItemStack(itemDrop, randomInt));
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (harvest != null) {
+                if (!harvest.getHarvest().isEmpty()) {
+                    for (JsonBlockBuilder.JsonBlockProperties blocks : harvest.getHarvest()) {
+                        if (blocks != null) {
+                            if (!blocks.getName().isEmpty()) {
+                                if (blockRegName != null) {
+                                    if (blocks.getName().equals(blockRegName.getNamespace() + ":" + blockRegName.getPath())) {
+                                        for (JsonBuilder.JsonItemStackProperty drops : blocks.getDrops()) {
+                                            if (drops != null) {
+                                                if (drops.getName() != null) {
+                                                    Item itemDrop = ForgeRegistries.ITEMS.getValue(new ResourceLocation(drops.getName()));
+                                                    if (itemDrop != null) {
+                                                        if (drops.getMinAmount() != 0 && drops.getMaxAmount() != 0 ) {
+                                                            int randomInt = MiscHelper.randomInRange(drops.getMinAmount(), drops.getMaxAmount());
+                                                            if (blocks.isWhitelist()) {
+                                                                if (EnhancedCelestials.currentLunarEvent instanceof HarvestMoon) {
+                                                                    if(chanceHandling(drops.getChance())) {
+                                                                        net.minecraft.inventory.InventoryHelper.spawnItemStack((World) event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), new ItemStack(itemDrop, randomInt));
+                                                                    }
+                                                                }
+                                                            } else if (!blocks.isWhitelist()) {
+                                                                if (!(EnhancedCelestials.currentLunarEvent instanceof HarvestMoon)) {
+                                                                    if(chanceHandling(drops.getChance())) {
+                                                                        net.minecraft.inventory.InventoryHelper.spawnItemStack((World) event.getWorld(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), new ItemStack(itemDrop, randomInt));
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -447,6 +617,6 @@ public class ECEEventsHandler {
         Random rand = new Random();
         double randN = rand.nextDouble();
 
-        return randN < (double) chance/100;
+        return randN < (double) chance / 100;
     }
 }
